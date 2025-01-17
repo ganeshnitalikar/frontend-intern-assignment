@@ -58,28 +58,6 @@ const AddProflieForm = () => {
     }
   };
 
-  const handleAddMultipleProfiles = async () => {
-    const testProfiles = Array.from({ length: 10 }, (_, index) => ({
-      id: nanoid(),
-      name: `Test User ${index + 1}`,
-      photo: `xsgames.co/randomusers/avatar.php?g=${
-        index % 2 === 0 ? "male" : "female"
-      }`,
-      description: `Description for user ${index + 1}`,
-      address: `https://maps.app.goo.gl/DKpSpGSKxxwPEZ9c8`,
-    }));
-
-    try {
-      for (const profile of testProfiles) {
-        await addProfileToFirebase(profile);
-      }
-      alert("10 profiles added successfully!");
-    } catch (error) {
-      console.error("Error adding profiles:", error);
-      alert("Failed to add profiles. Please try again.");
-    }
-  };
-
   return (
     <div className="flex justify-center items-center p-5 w-full flex-col">
       <div>
@@ -194,12 +172,6 @@ const AddProflieForm = () => {
             {isSubmitting ? "Adding..." : "Add New Profile"}
           </button>
         </form>
-        <button
-          className="text-white bg-green-500 hover:bg-green-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mt-5"
-          onClick={handleAddMultipleProfiles}
-        >
-          Add 10 Test Profiles
-        </button>
       </div>
     </div>
   );
