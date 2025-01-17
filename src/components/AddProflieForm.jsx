@@ -132,7 +132,7 @@ const AddProflieForm = () => {
               />
             </div>
             <label className="pt-1 block text-gray-500 text-sm">
-              Enter the link for profile photo
+              Link for profile photo without 'https://'
             </label>
             {errors.photo && (
               <p className="text-red-500 text-sm">{errors.photo}</p>
