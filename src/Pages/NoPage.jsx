@@ -1,7 +1,11 @@
 import React from "react";
 
 const NoPage = () => {
-  return <div>Error 404</div>;
+  return (
+    <div className="flex justify-center items-center h-[100vh]">
+      404 Page Not Found
+    </div>
+  );
 };
 
 export default NoPage;

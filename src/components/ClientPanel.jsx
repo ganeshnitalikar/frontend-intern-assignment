@@ -45,7 +45,7 @@ const ClientPanel = () => {
           />
         </div>
         {loading ? (
-          <div className="loading-indicator text-center">
+          <div className="text-center">
             <p>Loading profiles...</p>
           </div>
         ) : (

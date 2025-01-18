@@ -47,6 +47,9 @@ const EditProfile = () => {
     if (!profile.description)
       newErrors.description = "Description is required.";
     if (!profile.address) newErrors.address = "Address is required.";
+    if (!profile.contact) newErrors.contact = "Contact  is required.";
+    if (!profile.interests) newErrors.interes = "Interests  is required.";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -68,6 +71,8 @@ const EditProfile = () => {
           photo: profile.photo,
           description: profile.description,
           address: profile.address,
+          contact: profile.contact,
+          interests: profile.interests,
         });
 
         alert("Profile updated successfully!");
@@ -176,6 +181,42 @@ const EditProfile = () => {
             />
             {errors.address && (
               <p className="text-red-500 text-sm">{errors.address}</p>
+            )}
+          </div>
+          <div className="border-b-2 pb-3 border-neutral-950">
+            <label
+              htmlFor="address"
+              className="block text-gray-800 font-semibold text-sm"
+            >
+              Contact
+            </label>
+            <input
+              type="text"
+              name="contact"
+              value={profile.contact}
+              onChange={handleChange}
+              className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+            />
+            {errors.address && (
+              <p className="text-red-500 text-sm">{errors.contact}</p>
+            )}
+          </div>
+          <div className="border-b-2 pb-3 border-neutral-950">
+            <label
+              htmlFor="address"
+              className="block text-gray-800 font-semibold text-sm"
+            >
+              Interests
+            </label>
+            <input
+              type="text"
+              name="interests"
+              value={profile.interests}
+              onChange={handleChange}
+              className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+            />
+            {errors.address && (
+              <p className="text-red-500 text-sm">{errors.interests}</p>
             )}
           </div>
           <button

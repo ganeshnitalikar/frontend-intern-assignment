@@ -1,49 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import ProfileCard from "./ProfileCard";
 import "./Util.css";
 import { Link } from "react-router-dom";
 import { fetchProfiles } from "../services/FirebaseServices";
-import { setProfiles } from "../redux/proflieSlice";
+import { setProfiles, setSearchQuery } from "../redux/proflieSlice";
+import ProfileList from "./ProfileList";
 
 const AdminPanel = () => {
-  const profiles = useSelector((state) => state.profiles.profiles);
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const { searchQuery } = useSelector((state) => state.profiles);
 
   useEffect(() => {
-    const getProfiles = async () => {
+    const fetchAllProfiles = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const fetchedProfiles = await fetchProfiles(); // Fetch profiles from Firebase
-        dispatch(setProfiles(fetchedProfiles)); // Update Redux state
-      } catch (err) {
-        console.error("Error fetching profiles:", err);
-        setError("Failed to fetch profiles. Please try again later.");
+        const fetchedProfiles = await fetchProfiles();
+        dispatch(setProfiles(fetchedProfiles));
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    getProfiles();
+    fetchAllProfiles();
   }, [dispatch]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <h2>Loading profiles...</h2>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <h2>{error}</h2>
-      </div>
-    );
-  }
+  const handleSearch = (event) => {
+    dispatch(setSearchQuery(event.target.value));
+  };
 
   return (
     <div className="bg-neutral-500 w-full">
@@ -53,11 +39,24 @@ const AdminPanel = () => {
           <button className="btn">Add Profile</button>
         </Link>
       </div>
-      <div className="profile-list flex justify-center items-center w-full bg-slate-300 gap-3 p-5 flex-wrap">
-        {profiles.map((profile) => (
-          <ProfileCard key={profile.id} profile={profile} isAdmin />
-        ))}
+      <div className="p-5">
+        <div className="search-bar mb-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="Search profiles by name..."
+            className="p-2 w-full "
+          />
+        </div>
       </div>
+      {loading ? (
+        <div className=" text-center">
+          <p>Loading profiles...</p>
+        </div>
+      ) : (
+        <ProfileList AdminProfile={true} />
+      )}
     </div>
   );
 };

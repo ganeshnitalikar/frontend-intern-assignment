@@ -4,7 +4,7 @@ import "../components/Util.css";
 
 const Layout = () => {
   return (
-    <div className="bg-neutral-700 w-full h-full flex justify-center items-center flex-col p-4">
+    <div className="bg-neutral-700 w-full h-[100vh] flex justify-center items-center flex-col p-4">
       <h2 className="text-2xl">Select Role/Authentication</h2>
       <div className="flex justify-center items-center gap-4 p-5">
         <Link to="/clientHome">

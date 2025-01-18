@@ -1,7 +1,7 @@
-import { React, useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { addProfileToFirebase } from "../services/FirebaseServices";
-import { nanoid } from "nanoid"; // Import nanoid
+import { nanoid } from "nanoid";
 
 const AddProflieForm = () => {
   const [errors, setErrors] = useState({});
@@ -9,9 +9,10 @@ const AddProflieForm = () => {
   const [photo, setPhoto] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
+  const [contact, setContact] = useState("");
+  const [interests, setInterests] = useState("");
+  const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const dispatch = useDispatch();
 
   const validateForm = () => {
     const newErrors = {};
@@ -20,6 +21,8 @@ const AddProflieForm = () => {
     if (!photo) newErrors.photo = "Photo link is required.";
     if (!description) newErrors.description = "Description is required.";
     if (!address) newErrors.address = "Address is required.";
+    if (!contact) newErrors.contact = "Contact  is required.";
+    if (!interests) newErrors.interes = "Interests  is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -35,9 +38,12 @@ const AddProflieForm = () => {
     const newProfile = {
       id: nanoid(),
       name,
-      photo,
+      photo: `https://${photo}`,
       description,
       address,
+      contact,
+      interests,
+      coordinates,
     };
 
     try {
@@ -49,6 +55,9 @@ const AddProflieForm = () => {
         setPhoto("");
         setDescription("");
         setAddress("");
+        setContact("");
+        setInterests("");
+        setCoordinates({ lat: 0, lng: 0 });
         setIsSubmitting(false);
       }, 500);
     } catch (error) {
@@ -85,16 +94,13 @@ const AddProflieForm = () => {
                 disabled={isSubmitting}
               />
             </div>
-            <label className="pt-1 block text-gray-500 text-sm">
-              Enter Full Name
-            </label>
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name}</p>
             )}
           </div>
           <div className="border-b-2 pb-3 border-neutral-950 py-5">
             <label
-              htmlFor="inputname"
+              htmlFor="photo"
               className="block text-gray-800 font-semibold text-sm"
             >
               Photo Link
@@ -102,23 +108,20 @@ const AddProflieForm = () => {
             <div className="mt-2">
               <input
                 type="text"
-                name="photoLink"
-                className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                name="photo"
                 onChange={(e) => setPhoto(e.target.value)}
                 value={photo}
+                className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
                 disabled={isSubmitting}
               />
             </div>
-            <label className="pt-1 block text-gray-500 text-sm">
-              Link for profile photo without 'https://'
-            </label>
             {errors.photo && (
               <p className="text-red-500 text-sm">{errors.photo}</p>
             )}
           </div>
           <div className="border-b-2 pb-3 border-neutral-950 py-5">
             <label
-              htmlFor="inputname"
+              htmlFor="description"
               className="block text-gray-800 font-semibold text-sm"
             >
               Description
@@ -126,46 +129,86 @@ const AddProflieForm = () => {
             <div className="mt-2">
               <input
                 type="text"
-                name="inputname"
-                className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                name="description"
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
+                className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
                 disabled={isSubmitting}
               />
             </div>
-            <label className="pt-1 block text-gray-500 text-sm py-5">
-              Add Information About you
-            </label>
             {errors.description && (
               <p className="text-red-500 text-sm">{errors.description}</p>
             )}
           </div>
-          <div className="border-b-2 pb-3 border-neutral-950">
+          <div className="border-b-2 pb-3 border-neutral-950 py-5">
             <label
-              htmlFor="inputname"
+              htmlFor="description"
               className="block text-gray-800 font-semibold text-sm"
             >
-              Address
+              Contact
             </label>
             <div className="mt-2">
               <input
                 type="text"
-                name="inputname"
+                name="contact"
+                onChange={(e) => setContact(e.target.value)}
+                value={contact}
                 className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
-                onChange={(e) => setAddress(e.target.value)}
-                value={address}
                 disabled={isSubmitting}
               />
             </div>
-            <label className="pt-1 block text-gray-500 text-sm">
-              Add Your Address
-            </label>
-            {errors.address && (
-              <p className="text-red-500 text-sm">{errors.address}</p>
+            {errors.description && (
+              <p className="text-red-500 text-sm">{errors.description}</p>
             )}
           </div>
+          <div className="border-b-2 pb-3 border-neutral-950 py-5">
+            <label
+              htmlFor="description"
+              className="block text-gray-800 font-semibold text-sm"
+            >
+              Interests
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="interests"
+                onChange={(e) => setInterests(e.target.value)}
+                value={interests}
+                className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                disabled={isSubmitting}
+              />
+            </div>
+            {errors.description && (
+              <p className="text-red-500 text-sm">{errors.description}</p>
+            )}
+          </div>
+          <div className="border-b-2 pb-3 border-neutral-950 py-5">
+            <label
+              htmlFor="description"
+              className="block text-gray-800 font-semibold text-sm"
+            >
+              Street Address
+            </label>
+            <div className="mt-2">
+              <input
+                type="text"
+                name="address"
+                onChange={(e) => setAddress(e.target.value)}
+                value={address}
+                className="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                disabled={isSubmitting}
+              />
+            </div>
+            {errors.description && (
+              <p className="text-red-500 text-sm">{errors.description}</p>
+            )}
+          </div>
+
+          {errors.address && (
+            <p className="text-red-500 text-sm">{errors.address}</p>
+          )}
           <button
-            className="text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 mt-5"
+            className="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5 mt-5"
             type="submit"
             disabled={isSubmitting}
           >
