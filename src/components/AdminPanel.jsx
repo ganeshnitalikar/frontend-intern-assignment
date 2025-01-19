@@ -40,7 +40,7 @@ const AdminPanel = () => {
         </Link>
       </div>
       <div className="p-5">
-        <div className="search-bar mb-4">
+        <div className="search-bar my-4">
           <input
             type="text"
             value={searchQuery}
